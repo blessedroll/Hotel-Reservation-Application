@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 public class ReservationService {
     //dafault access modifier: not specifying one
     static final ReservationService singleton = new ReservationService();
+    private static final int recommendedRoomsPlusDays= 7;
 
     private final Map<String, IRoom> rooms = new HashMap<>();
     private final Map<String, Collection<Reservation>> reservations = new HashMap<>();
@@ -56,6 +57,17 @@ public class ReservationService {
         return findAvailableRooms(checkInDate, checkOutDate);
 
     }
+    public Collection<IRoom> findAlternativeRooms(final Date checkInDate, final Date checkOutDate) {
+        return findAvailableRooms(addDefaultPlusDays(checkInDate), addDefaultPlusDays(checkOutDate));
+    }
+
+    private Date addDefaultPlusDays(Date checkInDate) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(checkInDate);
+        calendar.add(Calendar.DATE, recommendedRoomsPlusDays);
+        return calendar.getTime();
+    }
+
 
     // default access modifier
     Collection<IRoom> findAvailableRooms(Date checkInDate, Date checkOutDate) {
